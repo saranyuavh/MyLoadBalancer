@@ -12,8 +12,11 @@ This project implements a custom application layer load balancer using **Java** 
 
 - Configurable for different load balancing algorithms and backend server settings
     * Currently available implementations
-        * Round Robin
-        * Weighted Round Robin
+        - Round Robin
+        - Weighted Round Robin
+
+## UML Diagram 
+<img src="uml.svg" alt="your-svg-image">
 
 
 
