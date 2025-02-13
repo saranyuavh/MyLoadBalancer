@@ -1,7 +1,10 @@
 package com.MyLoadBalancer.LoadBalancer.ServerManager;
 
+import com.MyLoadBalancer.LoadBalancer.LoadBalancerApplication;
 import com.MyLoadBalancer.LoadBalancer.Policies.ILoadBalancerPolicy;
 import com.MyLoadBalancer.LoadBalancer.Policies.PolicyFactory.LoadBalancerPolicyFactory;
+import jakarta.annotation.PostConstruct;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -25,6 +28,16 @@ import java.util.Map;
 @Component
 public class ServerManager {
 
+
+    @Value("${backend.server.health.urls}")
+    String serverHealthUrls;
+
+    @Value("${lb.policy.name}")
+    String policyName;
+
+    @Value("${backend.server.urls}")
+    String serverUrls;
+
     private Map<String, Boolean> serverHealthMap;
 
     private List<String> serverHealthUrlsList;
@@ -35,16 +48,16 @@ public class ServerManager {
 
     private ILoadBalancerPolicy loadBalancerPolicy;
 
-    public ServerManager(@Value("${backend.server.health.urls}") String serverHealthUrls,
-                         @Value("${lb.policy.name}") String policyName,
-                         @Value("${backend.server.urls}") String serverUrls
-                         ) {
+
+    private LoadBalancerPolicyFactory factory;
+
+    @PostConstruct
+    public void init() {
         serverHealthUrlsList = Arrays.asList((serverHealthUrls).split(","));
         serverUrlsList = Arrays.asList(serverUrls.split(","));
 
         restTemplate = new RestTemplate();
-
-        loadBalancerPolicy = LoadBalancerPolicyFactory.getInstance().getPolicyImpl(policyName);
+        loadBalancerPolicy = this.factory.getPolicyImpl(policyName.toLowerCase());
         serverHealthMap = new HashMap<>();
 
         for(String serverUrl : serverHealthUrlsList) {
@@ -52,8 +65,10 @@ public class ServerManager {
         }
     }
 
-
-    //TODO: Should behave consistently in case of concurrent requests
+    @Autowired
+    public void setLoadBalancerPolicyFactory(LoadBalancerPolicyFactory factory) {
+        this.factory = factory;
+    }
     public String getHealthyServer() throws NotActiveException {
         int attempts = 0;
         int totalAttempts = 0;
@@ -81,7 +96,6 @@ public class ServerManager {
         throw new NotActiveException("Healthy servers unavailable");
     }
 
-    //TODO: should work asynchronously
     @GetMapping("/check")
     @Scheduled(fixedRateString = "${lb.healthCheck.freq}")
     public ResponseEntity<String> healthCheckExecutor() {

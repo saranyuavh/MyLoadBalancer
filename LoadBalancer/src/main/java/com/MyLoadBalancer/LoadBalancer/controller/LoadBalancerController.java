@@ -26,9 +26,6 @@ import java.util.concurrent.ConcurrentHashMap;
 @RequestMapping("/")
 public class LoadBalancerController {
 
-    @Value("#{'${backend.server.urls}'.split(',')}")
-    private List<String> backendUrls;
-
     private final RestTemplate restTemplate;
 
     static HashMap<String, Integer> map = new HashMap<>();
@@ -39,6 +36,11 @@ public class LoadBalancerController {
     }
 
 
+    @Autowired
+    public void setServerManager(ServerManager serverManager) {
+        this.serverManager = serverManager;
+    }
+    
     @GetMapping("")
     public ResponseEntity<String> handleRequest(HttpServletRequest request, @RequestHeader Map<String, String> headers) {
         StringBuilder loggerStr = new StringBuilder();
@@ -48,7 +50,7 @@ public class LoadBalancerController {
                 .append("Host ").append(headers.get("host")).append("\n")
                 .append("User-Agent ").append(headers.get("user-agent")).append("\n")
                 .append("Accept ").append(headers.get("accept")).append("\n");
-//        System.out.println(loggerStr);
+        System.out.println(loggerStr);
 
         HttpHeaders requestHeaders = new HttpHeaders();
         requestHeaders.setAll(headers);
@@ -78,8 +80,4 @@ public class LoadBalancerController {
         return response;
     }
 
-    @Autowired
-    public void setServerManager(ServerManager serverManager) {
-        this.serverManager = serverManager;
-    }
 }

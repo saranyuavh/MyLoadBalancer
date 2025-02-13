@@ -1,7 +1,10 @@
 package com.MyLoadBalancer.LoadBalancer.Policies;
 
+import org.springframework.stereotype.Component;
+
 import java.util.concurrent.atomic.AtomicInteger;
 
+@Component
 public class RoundRobin implements ILoadBalancerPolicy{
     private static AtomicInteger backendServerInUse = new AtomicInteger();
     @Override

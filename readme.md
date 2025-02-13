@@ -10,9 +10,9 @@ This project implements a custom application layer load balancer using **Java** 
 
 - Supports **concurrent** requests
 
-- configurable for different load balancing algorithms and backend server settings
+- Configurable for different load balancing algorithms and backend server settings
 
-
+##
 
 
 
