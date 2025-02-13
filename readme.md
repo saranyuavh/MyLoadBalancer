@@ -11,8 +11,10 @@ This project implements a custom application layer load balancer using **Java** 
 - Supports **concurrent** requests
 
 - Configurable for different load balancing algorithms and backend server settings
+    * Currently available implementations
+        * Round Robin
+        * Weighted Round Robin
 
-##
 
 
 

@@ -1,6 +1,5 @@
 package com.MyLoadBalancer.LoadBalancer.ServerManager;
 
-import com.MyLoadBalancer.LoadBalancer.LoadBalancerApplication;
 import com.MyLoadBalancer.LoadBalancer.Policies.ILoadBalancerPolicy;
 import com.MyLoadBalancer.LoadBalancer.Policies.PolicyFactory.LoadBalancerPolicyFactory;
 import jakarta.annotation.PostConstruct;

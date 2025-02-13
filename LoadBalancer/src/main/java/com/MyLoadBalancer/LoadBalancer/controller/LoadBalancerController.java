@@ -4,7 +4,6 @@ package com.MyLoadBalancer.LoadBalancer.controller;
 import com.MyLoadBalancer.LoadBalancer.ServerManager.ServerManager;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
@@ -18,9 +17,7 @@ import org.springframework.web.client.RestTemplate;
 import java.io.NotActiveException;
 import java.lang.StringBuilder;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 @RestController
 @RequestMapping("/")
@@ -40,7 +37,7 @@ public class LoadBalancerController {
     public void setServerManager(ServerManager serverManager) {
         this.serverManager = serverManager;
     }
-    
+
     @GetMapping("")
     public ResponseEntity<String> handleRequest(HttpServletRequest request, @RequestHeader Map<String, String> headers) {
         StringBuilder loggerStr = new StringBuilder();
